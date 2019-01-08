@@ -3,15 +3,20 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --disableHostCheck true",
+    "start-no-ssr": "ng serve --host 0.0.0.0 --disableHostCheck true",
+    "start": "npm run build:ssr && npm run serve:ssr",
     "build": "ng build",
     "build:dev": "ng build --output-path dist --configuration=dev",
     "build:test": "ng build --output-path dist --configuration=test",
+    "build:ssr": "npm run build:client-and-server-bundles && npm run webpack:server",
+    "serve:ssr": "node dist/server.js",
     "test": "jest --config jest.config.js",
     "test:watch": "jest --watch",
     "test:ci": "export JEST_JUNIT_OUTPUT='./reports/unit/junit-report.xml' && jest --ci --coverage",
     "lint": "ng lint",
     "dev-server": "node server",
+    "build:client-and-server-bundles": "ng build --prod && ng run angular-fe:server",
+    "webpack:server": "webpack --config webpack.server.config.js --progress --colors",
     "e2e": "ng e2e",
     "e2e:ci": "npm-run-all -p -r dev-server e2e:ng",
     "e2e:ng": "ng e2e --protractor-config e2e/protractor.conf.ci.js",
@@ -31,9 +36,13 @@
     "@angular/http": "^7.1.4",
     "@angular/platform-browser": "^7.1.4",
     "@angular/platform-browser-dynamic": "^7.1.4",
+    "@angular/platform-server": "^7.2.0",
     "@angular/router": "^7.1.4",
+    "@nguniversal/express-engine": "^7.0.2",
+    "@nguniversal/module-map-ngfactory-loader": "^7.0.2",
     "core-js": "^2.5.4",
     "rxjs": "~6.3.3",
+    "ts-loader": "^5.3.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },
@@ -64,6 +73,7 @@
     "protractor-html-reporter-2": "^1.0.4",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
-    "typescript": "~3.1.6"
+    "typescript": "~3.1.6",
+    "webpack-cli": "^3.2.1"
   }
 }
